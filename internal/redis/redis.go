@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -20,18 +21,24 @@ func Connect() (Connection, error) {
 	return Connection{client: client}, nil
 }
 
-func (c *Connection) Get(key string) (string, error) {
+func (c *Connection) Get(key string) (url.URL, error) {
 	ctx := context.Background()
 	res, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		panic(err)
 	}
-	return res, nil
+
+	url, err := url.Parse(res)
+	if err != nil {
+		panic(err)
+	}
+
+	return *url, nil
 }
 
-func (c *Connection) Set(key, value string) error {
+func (c *Connection) Set(key string, value url.URL) error {
 	ctx := context.Background()
-	err := c.client.Set(ctx, key, value, 0).Err()
+	err := c.client.Set(ctx, key, value.String(), 0).Err()
 	if err != nil {
 		panic(err)
 	}

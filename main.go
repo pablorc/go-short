@@ -1,10 +1,10 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/pablorc/shrtnr/internal/redis"
@@ -13,6 +13,7 @@ import (
 func getRoot(w http.ResponseWriter, r *http.Request, red redis.Connection) {
 	url := r.URL.Path
 	fmt.Printf("got %s request\n", url)
+
 	if url == "/" {
 		io.WriteString(w, "This is my website!\n")
 	} else {
@@ -25,18 +26,14 @@ func redirect(w http.ResponseWriter, r *http.Request, path string, red redis.Con
 	if err != nil {
 		fmt.Printf("ERR: %s\n", err.Error())
 	} else {
-		http.Redirect(w, r, url, http.StatusSeeOther)
+		http.Redirect(w, r, url.String(), http.StatusSeeOther)
 	}
 }
 
-func redirectionFor(path string, red redis.Connection) (string, error) {
+func redirectionFor(path string, red redis.Connection) (url.URL, error) {
 	url, err := red.Get(path)
 	if err != nil {
 		panic(err)
-	}
-
-	if url == "" {
-		return "", errors.New("No redirection")
 	}
 
 	return url, nil
