@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/pablorc/shrtnr/internal/keygen"
-	"github.com/pablorc/shrtnr/internal/redis"
+	"github.com/pablorc/go-short/internal/keygen"
+	"github.com/pablorc/go-short/internal/redis"
 )
 
 func getForm(w http.ResponseWriter, r *http.Request, red redis.Connection) {

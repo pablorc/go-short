@@ -1,4 +1,4 @@
-module github.com/pablorc/shrtnr
+module github.com/pablorc/go-short
 
 go 1.21.0
 
