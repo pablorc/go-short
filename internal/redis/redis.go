@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"net/url"
+	"os"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -13,9 +14,9 @@ type Connection struct {
 
 func Connect() (Connection, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     os.Getenv("REDIS_ADDR"),
+		Password: "",
+		DB:       0, // use default DB
 	})
 
 	return Connection{client: client}, nil
