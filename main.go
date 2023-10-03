@@ -47,7 +47,8 @@ func getForm(w http.ResponseWriter, r *http.Request, red redis.Connection) {
 	red.Set(key, *url)
 
 	fmt.Printf("Saved new URL %s: %s\n", url.String(), key)
-	fmt.Fprintf(w, "http://localhost:3333/%s\n", key)
+	host := os.Getenv("APP_HOST")
+	fmt.Fprintf(w, "%s/%s\n", host, key)
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request, red redis.Connection) {
