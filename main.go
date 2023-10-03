@@ -12,6 +12,21 @@ import (
 )
 
 func getForm(w http.ResponseWriter, r *http.Request, red redis.Connection) {
+	username := os.Getenv("HTTP_USERNAME")
+	password := os.Getenv("HTTP_PASSWORD")
+
+	u, p, ok := r.BasicAuth()
+	if !ok {
+		fmt.Println("Error parsing basic auth")
+		w.WriteHeader(401)
+		return
+	}
+	if u != username || p != password {
+		fmt.Println("Invalid credencials")
+		w.WriteHeader(401)
+		return
+	}
+
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
